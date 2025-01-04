@@ -33,25 +33,13 @@ SinglePress(lastkey, sendkey) {
     return
 }
 
-; [single press]
-~LControl:: SinglePress("LControl", "{Enter}")
-
 ; [key combination]
-; allow
+; allow for vim
 ~^left::home
 ~^right::end
 
-; semicolon and colon
-^Enter::Send "{`;}"
-+Enter::Send "{`:}"
 ; for slack
-!Enter:: ^Enter
-
-; LAlt -> eisuu
-LAlt::Send "{vk1Dsc07B}"
-
-; RAlt -> kana
-RAlt::Send "{vk1Csc079}"
+!Enter::^Enter
 
 ; [system]
 ; alt tab
