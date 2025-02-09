@@ -42,9 +42,6 @@ SinglePress(lastkey, sendkey) {
 !Enter::^Enter
 
 ; [system]
-; alt tab
-LAlt & w::AltTab
-
 ; screen lock
 ; https://stackoverflow.com/questions/42314908/how-can-i-lock-my-computer-with-autohotkey
 ^+r::DllCall("LockWorkStation")
