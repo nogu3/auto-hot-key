@@ -52,17 +52,62 @@ SinglePress(lastkey, sendkey) {
 ; screen shot
 ^+s::#+s
 
-; maximize win
+; 最大化（カレントモニター）
 #up:: {
-  WinMove 0, 0, A_ScreenWidth, A_ScreenHeight, "A"
+    activeMonitor := GetMonitorIndexFromWindow(WinExist("A"))
+    MonitorGetWorkArea(activeMonitor, &monitorLeft, &monitorTop, &monitorRight, &monitorBottom)
+    monitorWidth := monitorRight - monitorLeft
+    monitorHeight := monitorBottom - monitorTop
+    WinMove(monitorLeft, monitorTop, monitorWidth, monitorHeight, "A")
 }
 
-; left win
+; 左半分表示（カレントモニター）- 隙間調整
 #+Left:: {
-  WinMove 0, 0, A_ScreenWidth/2, A_ScreenHeight, "A"
+    activeMonitor := GetMonitorIndexFromWindow(WinExist("A"))
+    MonitorGetWorkArea(activeMonitor, &monitorLeft, &monitorTop, &monitorRight, &monitorBottom)
+    monitorWidth := monitorRight - monitorLeft
+    monitorHeight := monitorBottom - monitorTop
+    
+    ; 隙間調整（+1ピクセル）
+    adjustedWidth := monitorWidth / 2 + 1
+    
+    WinMove(monitorLeft, monitorTop, adjustedWidth, monitorHeight, "A")
 }
 
-; right win
+; 右半分表示（カレントモニター）- 隙間調整
 #+Right:: {
-  WinMove A_ScreenWidth/2, 0, A_ScreenWidth/2, A_ScreenHeight, "A"
+    activeMonitor := GetMonitorIndexFromWindow(WinExist("A"))
+    MonitorGetWorkArea(activeMonitor, &monitorLeft, &monitorTop, &monitorRight, &monitorBottom)
+    monitorWidth := monitorRight - monitorLeft
+    monitorHeight := monitorBottom - monitorTop
+    
+    ; 位置と幅の調整
+    adjustedWidth := monitorWidth / 2 + 1
+    adjustedLeft := monitorLeft + monitorWidth / 2 - 1
+    
+    WinMove(adjustedLeft, monitorTop, adjustedWidth, monitorHeight, "A")
+}
+
+; アクティブウィンドウがあるモニターのインデックスを取得する関数
+GetMonitorIndexFromWindow(windowHandle) {
+    ; モニター情報を取得
+    monitorCount := MonitorGetCount()
+    if (monitorCount <= 1)
+        return 1
+    
+    ; ウィンドウの位置を取得
+    WinGetPos(&winX, &winY, &winWidth, &winHeight, windowHandle)
+    winMiddleX := winX + winWidth / 2
+    winMiddleY := winY + winHeight / 2
+    
+    ; 各モニターについて確認
+    Loop monitorCount {
+        MonitorGetWorkArea(A_Index, &monLeft, &monTop, &monRight, &monBottom)
+        if (winMiddleX >= monLeft && winMiddleX <= monRight && winMiddleY >= monTop && winMiddleY <= monBottom) {
+            return A_Index
+        }
+    }
+    
+    ; デフォルト値（プライマリモニター）
+    return 1
 }
