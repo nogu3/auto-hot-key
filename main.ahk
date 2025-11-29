@@ -12,31 +12,10 @@
 ; working dir is script run dir.
 SetWorkingDir A_ScriptDir
 
-; [functions]
-; alone and withctrl is keybind.
-CombinationCtrl(alone, withctrl) {
-    if GetKeyState("Control") {
-        Send withctrl
-        return
-    }
-
-    Send alone
-}
-
-; key is valid when single
-SinglePress(lastkey, sendkey) {
-    KeyWait lastkey
-    If (A_PriorKey = lastkey)
-    {
-        Send sendkey
-    }
-    return
-}
-
 ; [key combination]
 ; allow for vim
-~^left::home
-~^right::end
+^left::SendEvent "{Home}"
+^right::SendEvent "{End}"
 
 ; for slack
 !Enter::^Enter
