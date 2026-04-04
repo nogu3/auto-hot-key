@@ -16,6 +16,8 @@ SetWorkingDir A_ScriptDir
 ; allow for vim
 ^left::SendEvent "{Home}"
 ^right::SendEvent "{End}"
+^+left::SendEvent "+{Home}"
+^+right::SendEvent "+{End}"
 
 ; for slack
 !Enter::^Enter
